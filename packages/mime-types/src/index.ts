@@ -27,11 +27,18 @@ function extname(path: string) {
   return index < 0 ? "" : path.substring(index);
 }
 
-export const extensions = {} as Record<MimeType, FileExtension[]>;
-export const types = {} as Record<FileExtension, MimeType>;
+const extensions = {} as Record<MimeType, FileExtension[]>;
+const types = {} as Record<FileExtension, MimeType>;
 
-// Populate the extensions/types maps
-populateMaps(extensions, types);
+export const getExtensions = () => {
+  populateMaps(extensions, types);
+  return extensions;
+};
+
+export const getTypes = () => {
+  populateMaps(extensions, types);
+  return types;
+};
 
 /**
  * Lookup the MIME type for a file path/extension.
@@ -53,9 +60,10 @@ export function lookup(path: string) {
     return false;
   }
 
-  return types[extension] || false;
+  return getTypes()[extension] || false;
 }
 
+let initted = false;
 /**
  * Populate the extensions and types maps.
  * @private
@@ -65,6 +73,8 @@ function populateMaps(
   extensions: Record<MimeType, FileExtension[]>,
   types: Record<FileExtension, MimeType>,
 ) {
+  if (initted) return;
+  initted = true;
   // source preference (least -> most)
   const preference = ["nginx", "apache", undefined, "iana"];
 

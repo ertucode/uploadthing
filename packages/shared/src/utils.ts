@@ -1,6 +1,6 @@
 import { process } from "std-env";
 
-import { lookup } from "@uploadthing/mime-types";
+import { extensions, lookup } from "@uploadthing/mime-types";
 
 import type { AllowedFileType } from "./file-types";
 import type {
